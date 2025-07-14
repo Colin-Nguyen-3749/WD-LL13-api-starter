@@ -23,64 +23,66 @@ Start your code below 👇
 // Use this script to write your fetch logic
 // You'll fetch data from your selected API and display it on the page
 
-// Function to fetch a cat fact from the API
-function fetchCatFact() {
-    console.log("Fetching cat fact...");
+// Function to fetch a yes/no answer from the API
+function fetchYesNoAnswer() {
+    console.log("Fetching yes/no answer...");
     
-    fetch('https://catfact.ninja/fact')
-        .then(response => {
+    fetch('https://yesno.wtf/api')
+        .then(function(response) {
             // Check if the request was successful
             if (response.ok) {
                 return response.json();
             } else {
-                throw new Error('Failed to fetch cat fact');
+                throw new Error('Failed to fetch yes/no answer');
             }
         })
         .then(function(data) {
-            // Display the cat fact on the page
-            displayCatFact(data.fact);
+            // Display the answer and GIF on the page
+            displayYesNoAnswer(data.answer, data.image);
         })
         .catch(function(error) {
             // Handle any errors that occurred
             console.error('Error:', error);
-            displayError('Sorry, could not load a cat fact right now.');
+            displayError('Sorry, could not load a yes/no answer right now.');
         });
 }
 
-// Function to display the cat fact on the webpage
-function displayCatFact(fact) {
-    // Find the element where we want to display the fact
-    const factContainer = document.getElementById('cat-fact-container');
+// Function to display the yes/no answer and GIF on the webpage
+function displayYesNoAnswer(answer, imageUrl) {
+    // Find the output container
+    const outputContainer = document.getElementById('output');
     
-    if (factContainer) {
-        factContainer.innerHTML = '<h2>Cat Fact:</h2><p>' + fact + '</p>';
-    } else {
-        // If container doesn't exist, create one and add to body
-        const newContainer = document.createElement('div');
-        newContainer.id = 'cat-fact-container';
-        newContainer.innerHTML = '<h2>Cat Fact:</h2><p>' + fact + '</p>';
-        document.body.appendChild(newContainer);
+    // Add some comic book flair to the answer
+    let comicAnswer = answer.toUpperCase();
+    if (answer.toLowerCase() === 'yes') {
+        comicAnswer = '💥 YES! 💥';
+    } else if (answer.toLowerCase() === 'no') {
+        comicAnswer = '⚡ NO! ⚡';
+    }
+    
+    if (outputContainer) {
+        outputContainer.innerHTML = 
+            '<div class="speech-bubble">' + comicAnswer + '</div>' +
+            '<div class="gif-container">' +
+            '<img src="' + imageUrl + '" alt="' + answer + ' GIF" style="max-width: 400px;">' +
+            '</div>' +
+            '<button class="refresh-button" onclick="fetchYesNoAnswer()">⚡ ZAP! Another Answer! ⚡</button>';
     }
 }
 
 // Function to display error messages
 function displayError(message) {
-    const factContainer = document.getElementById('cat-fact-container');
+    const outputContainer = document.getElementById('output');
     
-    if (factContainer) {
-        factContainer.innerHTML = '<h2>Oops!</h2><p>' + message + '</p>';
-    } else {
-        const newContainer = document.createElement('div');
-        newContainer.id = 'cat-fact-container';
-        newContainer.innerHTML = '<h2>Oops!</h2><p>' + message + '</p>';
-        document.body.appendChild(newContainer);
+    if (outputContainer) {
+        outputContainer.innerHTML = '<h2>Oops!</h2><p>' + message + '</p>';
     }
 }
 
-// Fetch a cat fact when the page loads
+// Fetch a yes/no answer when the page loads
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("Page loaded, fetching cat fact...");
-    fetchCatFact();
+    console.log("Page loaded, fetching yes/no answer...");
+    fetchYesNoAnswer();
 });
 
 // Example placeholder:
